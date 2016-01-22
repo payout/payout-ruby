@@ -1,4 +1,69 @@
 RSpec.describe Payout do
+  describe '::version' do
+    subject { Payout.version }
+    it { is_expected.to eq Payout::VERSION }
+  end # ::version
+
+  describe '::api_version' do
+    subject { Payout.api_version }
+
+    context 'with being set to a string' do
+      it 'should raise ArgumentError' do
+        expect { Payout.api_version = '1' }.to raise_error ArgumentError,
+          'must be an integer'
+      end
+    end
+
+    context 'with being set to negative integer' do
+      it 'should raise ArgumentError' do
+        expect { Payout.api_version = -1 }.to raise_error ArgumentError,
+          'must be a positive integer'
+      end
+    end
+
+    context 'with being set to unsupported version' do
+      it 'should raise ArgumentError' do
+        expect { Payout.api_version = 1337 }.to raise_error ArgumentError,
+          'unsupported version'
+      end
+    end
+
+    context 'with it being automatically set by accessing a constant' do
+      # This should cause the `const_missing` method to auto include the default
+      # version.
+      before { Payout::Card }
+
+      it 'should equal default version' do
+        is_expected.to be Payout::DEFAULT_API_VERSION
+      end
+    end
+
+    context 'with it already having been initialized' do
+      # This test assumes that the contexts are being run in order.
+      # The 'without it being set' context test will cause the API_VERSION
+      # constant to be defined. Since it can't be undefined we can't fully
+      # isolate these tests.
+
+      it 'should raise VersionError' do
+        expect { Payout.api_version = Payout::DEFAULT_API_VERSION }
+          .to raise_error Payout::VersionError, 'cannot change version after '\
+            'it has been initialized'
+      end
+    end
+  end # ::api_version
+
+  describe '::const_missing' do
+    # Here we can only test const_missing *after* the version has been
+    # initialized since it gets initialized in the '::api_version' tests above.
+
+    context 'with undefined constant' do
+      it 'should raise standard NameError' do
+        expect { Payout::UNDEFINED_CONSTANT }.to raise_error NameError,
+          'uninitialized constant Payout::UNDEFINED_CONSTANT'
+      end
+    end
+  end # ::const_missing
+
   describe '::api_url' do
     subject { Payout.api_url }
 
@@ -61,7 +126,7 @@ RSpec.describe Payout do
     subject { Payout.open_timeout }
 
     context 'without having set a value' do
-      it { is_expected.to eq 30 }
+      it { is_expected.to eq Payout::DEFAULT_OPEN_TIMEOUT }
     end
 
     context 'with having been set to 15' do
@@ -88,7 +153,7 @@ RSpec.describe Payout do
     subject { Payout.read_timeout }
 
     context 'without having set a value' do
-      it { is_expected.to eq 80 }
+      it { is_expected.to eq Payout::DEFAULT_READ_TIMEOUT }
     end
 
     context 'with having been set to 15' do
@@ -134,7 +199,7 @@ RSpec.describe Payout do
     end
 
     context 'with open_timeout unset' do
-      it { should_request_with(open_timeout: 30) }
+      it { should_request_with(open_timeout: Payout::DEFAULT_OPEN_TIMEOUT) }
     end
 
     context 'with open_timeout = 11' do
@@ -143,7 +208,7 @@ RSpec.describe Payout do
     end
 
     context 'with read_timeout unset' do
-      it { should_request_with(read_timeout: 80) }
+      it { should_request_with(read_timeout: Payout::DEFAULT_READ_TIMEOUT) }
     end
 
     context 'with read_timeout = 11' do

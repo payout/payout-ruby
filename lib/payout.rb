@@ -5,12 +5,30 @@ require 'openssl'
 require 'rest-client'
 
 module Payout
+  autoload(:V1, 'payout/v1')
+
   class Error < StandardError; end
   class AuthenticationError < Error; end
+  class VersionError < Error; end
 
+  DEFAULT_API_VERSION = 1
+  DEFAULT_OPEN_TIMEOUT = 30
+  DEFAULT_READ_TIMEOUT = 80
   SSL_CA_FILE = File.expand_path('../../data/ca-file.crt', __FILE__).freeze
 
   class << self
+    def version
+      VERSION
+    end
+
+    def api_version
+      if const_defined?(:API_VERSION)
+        API_VERSION
+      else
+        self.api_version = DEFAULT_API_VERSION
+      end
+    end
+
     def api_url
       @api_url || 'https://live.payout.com'
     end
@@ -26,11 +44,18 @@ module Payout
     end
 
     def open_timeout
-      @open_timeout || 30
+      @open_timeout || DEFAULT_OPEN_TIMEOUT
     end
 
     def read_timeout
-      @read_timeout || 80
+      @read_timeout || DEFAULT_READ_TIMEOUT
+    end
+
+    def api_version=(version)
+      fail ArgumentError, 'must be an integer' unless version.is_a?(Integer)
+      fail ArgumentError, 'must be a positive integer' unless version > 0
+
+      _include_version(version)
     end
 
     def api_url=(api_url)
@@ -88,6 +113,27 @@ module Payout
     end
 
     private
+
+    def const_missing(name)
+      super if const_defined?(:API_VERSION)
+      self.api_version = DEFAULT_API_VERSION
+      super unless const_defined?(name)
+      const_get(name)
+    end
+
+    def _include_version(version)
+      if const_defined?(:API_VERSION)
+        fail VersionError, 'cannot change version after it has been initialized'
+      end
+
+      unless (version_const = "V#{version}") && const_defined?(version_const)
+        fail ArgumentError, 'unsupported version'
+      end
+
+      include const_get(version_const)
+
+      const_set(:API_VERSION, version)
+    end
 
     def _build_request_url(path)
       api_url + (path[0] == '/' ? path : "/#{path}")
