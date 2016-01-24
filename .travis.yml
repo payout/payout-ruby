@@ -1,31 +1,6 @@
 language: ruby
 rvm:
-  - 2.1.6
-  - 2.0.0-p645
-  - 2.1.6
-  - 2.2.2
-  - jruby-19mode
-  - jruby-20mode
-  - jruby-21mode
-jdk:
-  - openjdk7
-  - oraclejdk7
-matrix:
-  exclude:
-    - rvm: 1.9.3
-      jdk: openjdk7
-    - rvm: 1.9.3
-      jdk: oraclejdk7
-    - rvm: 2.0.0-p645
-      jdk: openjdk7
-    - rvm: 2.0.0-p645
-      jdk: oraclejdk7
-    - rvm: 2.1.6
-      jdk: openjdk7
-    - rvm: 2.1.6
-      jdk: oraclejdk7
-    - rvm: 2.2.2
-      jdk: openjdk7
-    - rvm: 2.2.2
-      jdk: oraclejdk7
-  
+  - "2.1.6"
+  - "2.0.0-p645"
+  - "2.1.6"
+  - "2.2.2"
