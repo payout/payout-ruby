@@ -62,7 +62,7 @@ module SharedContext
     Payout.api_token = 'api_token'
     Payout.api_secret = 'api_secret'
 
-    expect(mock_client).to receive(:request).with(*args).once do
+    expect(mock_client).to receive(:request).with(*args).once do |*args|
       Payout.orig_request(*args)
     end
 

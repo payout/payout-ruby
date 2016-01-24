@@ -25,6 +25,29 @@ module Payout
         end
       end # ::tokenize
 
+      describe '::update_customer' do
+        subject { Card.update_customer(params) }
+
+        context 'with required customer params' do
+          let(:params) do
+            {
+              card_token: token,
+              name: 'John Smith',
+              address_line1: '1 Stockton St.',
+              address_line2: '#123',
+              address_city: 'San Francisco',
+              address_state: 'CA',
+              address_zip: '94108'
+            }
+          end
+
+          it 'should make expected request' do
+            should_request_with(:put, "/v1/cards/#{token}/customer",
+              params.reject { |x| x == :card_token })
+          end
+        end
+      end # ::update_customer
+
       describe '::credit' do
         subject { Card.credit(params) }
 
@@ -37,7 +60,8 @@ module Payout
           end
 
           it 'should make expected request' do
-            should_request_with(:post, '/v1/cards/%s/credits' % token, params)
+            should_request_with(:post, '/v1/cards/%s/credits' % token,
+              params.reject { |x| x == :card_token })
           end
         end
 
