@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    payout (0.0.1)
+    payout (0.1.0)
       rest-client (~> 1.8)
 
 GEM
