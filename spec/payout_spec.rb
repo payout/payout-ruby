@@ -191,40 +191,40 @@ RSpec.describe Payout do
     let(:api_secret) { 'api_secret' }
 
     it 'should set verify_ssl to verify peer' do
-      should_request_with(verify_ssl: OpenSSL::SSL::VERIFY_PEER)
+      should_execute_with(verify_ssl: OpenSSL::SSL::VERIFY_PEER)
     end
 
     it 'should set ssl_ca_file to Payout::SSL_CA_FILE' do
-      should_request_with(ssl_ca_file: Payout::SSL_CA_FILE)
+      should_execute_with(ssl_ca_file: Payout::SSL_CA_FILE)
     end
 
     context 'with open_timeout unset' do
-      it { should_request_with(open_timeout: Payout::DEFAULT_OPEN_TIMEOUT) }
+      it { should_execute_with(open_timeout: Payout::DEFAULT_OPEN_TIMEOUT) }
     end
 
     context 'with open_timeout = 11' do
       before { Payout.open_timeout = 11 }
-      it { should_request_with(open_timeout: 11) }
+      it { should_execute_with(open_timeout: 11) }
     end
 
     context 'with read_timeout unset' do
-      it { should_request_with(read_timeout: Payout::DEFAULT_READ_TIMEOUT) }
+      it { should_execute_with(read_timeout: Payout::DEFAULT_READ_TIMEOUT) }
     end
 
     context 'with read_timeout = 11' do
       before { Payout.read_timeout = 11 }
-      it { should_request_with(read_timeout: 11) }
+      it { should_execute_with(read_timeout: 11) }
     end
 
     context 'with verb = :get' do
       let(:verb) { :get }
-      it { should_request_with(method: :get) }
+      it { should_execute_with(method: :get) }
 
       context 'with params = nil' do
         let(:params) { nil }
 
         it 'should not pass params in headers' do
-          should_request_with(headers: hash_excluding(:params))
+          should_execute_with(headers: hash_excluding(:params))
         end
       end
 
@@ -232,7 +232,7 @@ RSpec.describe Payout do
         let(:params) { {} }
 
         it 'should not pass params in headers' do
-          should_request_with(headers: hash_excluding(:params))
+          should_execute_with(headers: hash_excluding(:params))
         end
       end
 
@@ -240,20 +240,20 @@ RSpec.describe Payout do
         let(:params) { { a: 1, b: 2, c: 3 } }
 
         it 'should pass params in headers' do
-          should_request_with(headers: hash_including(params: params))
+          should_execute_with(headers: hash_including(params: params))
         end
       end
     end # with verb = :get
 
     context 'with verb = :delete' do
       let(:verb) { :delete }
-      it { should_request_with(method: :delete) }
+      it { should_execute_with(method: :delete) }
 
       context 'with params = nil' do
         let(:params) { nil }
 
         it 'should not pass params in headers' do
-          should_request_with(headers: hash_excluding(:params))
+          should_execute_with(headers: hash_excluding(:params))
         end
       end
 
@@ -261,7 +261,7 @@ RSpec.describe Payout do
         let(:params) { {} }
 
         it 'should not pass params in headers' do
-          should_request_with(headers: hash_excluding(:params))
+          should_execute_with(headers: hash_excluding(:params))
         end
       end
 
@@ -269,20 +269,20 @@ RSpec.describe Payout do
         let(:params) { { a: 1, b: 2, c: 3 } }
 
         it 'should pass params in headers' do
-          should_request_with(headers: hash_including(params: params))
+          should_execute_with(headers: hash_including(params: params))
         end
       end
     end # with verb = :delete
 
     context 'with verb = :post' do
       let(:verb) { :post }
-      it { should_request_with(method: :post) }
+      it { should_execute_with(method: :post) }
 
       context 'with params = nil' do
         let(:params) { nil }
 
         it 'should pass nil payload' do
-          should_request_with(payload: nil)
+          should_execute_with(payload: nil)
         end
       end
 
@@ -290,7 +290,7 @@ RSpec.describe Payout do
         let(:params) { {} }
 
         it 'should pass nil payload' do
-          should_request_with(payload: nil)
+          should_execute_with(payload: nil)
         end
       end
 
@@ -298,11 +298,11 @@ RSpec.describe Payout do
         let(:params) { { a: 1, b: 2, c: 3 } }
 
         it 'should pass params as JSON payload' do
-          should_request_with(payload: params.to_json)
+          should_execute_with(payload: params.to_json)
         end
 
         it 'should set Content-Type: application/json' do
-          should_request_with(
+          should_execute_with(
             headers: hash_including(content_type: 'application/json')
           )
         end
@@ -311,13 +311,13 @@ RSpec.describe Payout do
 
     context 'with verb = :put' do
       let(:verb) { :put }
-      it { should_request_with(method: :put) }
+      it { should_execute_with(method: :put) }
 
       context 'with params = nil' do
         let(:params) { nil }
 
         it 'should pass nil payload' do
-          should_request_with(payload: nil)
+          should_execute_with(payload: nil)
         end
       end
 
@@ -325,7 +325,7 @@ RSpec.describe Payout do
         let(:params) { {} }
 
         it 'should pass nil payload' do
-          should_request_with(payload: nil)
+          should_execute_with(payload: nil)
         end
       end
 
@@ -333,11 +333,11 @@ RSpec.describe Payout do
         let(:params) { { a: 1, b: 2, c: 3 } }
 
         it 'should pass params as JSON payload' do
-          should_request_with(payload: params.to_json)
+          should_execute_with(payload: params.to_json)
         end
 
         it 'should set Content-Type: application/json' do
-          should_request_with(
+          should_execute_with(
             headers: hash_including(content_type: 'application/json')
           )
         end
@@ -357,7 +357,7 @@ RSpec.describe Payout do
       let(:path) { 'test_path' }
 
       it 'should build URL correctly' do
-        should_request_with(url: "https://live.payout.com/#{path}")
+        should_execute_with(url: "https://live.payout.com/#{path}")
       end
     end
   end # ::request

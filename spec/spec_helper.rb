@@ -19,6 +19,22 @@ module Payout
       @mock_client = nil
     end
 
+    ##
+    # Allows the ::request method to be mocked during the duration of the
+    # current test.
+    def mock_request
+      @mock_request = true
+    end
+
+    alias_method :orig_request, :request
+    def request(*args)
+      if @mock_request
+        @mock_client.request(*args)
+      else
+        orig_request(*args)
+      end
+    end
+
     private
 
     def _request(request_opts)
@@ -31,10 +47,26 @@ module SharedContext
   extend RSpec::SharedContext
   let(:mock_client) { Payout.mock_client }
 
-  def should_request_with(opts)
+  def should_execute_with(opts)
     expect(mock_client).to receive(:execute).with(hash_including(opts)).once do
       # Here the response doesn't matter since we're only testing what the
       # client should receive not what it should respond with.
+      double('response', code: 200, body: nil)
+    end
+
+    subject
+  end
+
+  def should_request_with(*args)
+    Payout.mock_request
+    Payout.api_token = 'api_token'
+    Payout.api_secret = 'api_secret'
+
+    expect(mock_client).to receive(:request).with(*args).once do
+      Payout.orig_request(*args)
+    end
+
+    allow(mock_client).to receive(:execute).once do
       double('response', code: 200, body: nil)
     end
 
