@@ -1,6 +1,7 @@
 language: ruby
 rvm:
   - "2.1.6"
-  - "2.0.0-p645"
+  - "2.0.0-p247"
   - "2.1.6"
   - "2.2.2"
+script: bundle exec rspec
