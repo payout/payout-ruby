@@ -1,7 +1,7 @@
 module Payout
   module V1::Payment
     class << self
-      def search(params)
+      def search(params = {})
         Payout.request(:get, '/v1/payments', params)
       end
 
