@@ -20,6 +20,13 @@ gem 'payout'
 
 And then run `bundle install`.
 
+## Ruby Versions
+The SDK has been tested on Linux with the following ruby versions:
+ * 1.9.3
+ * 2.0.0-p247
+ * 2.1.6
+ * 2.2.2
+
 ## Configuration
 
 ```ruby
