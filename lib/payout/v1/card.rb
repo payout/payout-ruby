@@ -10,19 +10,22 @@ module Payout
       end
 
       def update_customer(params)
-        params = params.dup
-        token = params.delete(:card_token) or
-          fail ArgumentError, 'missing card_token'
-
+        token, params = _extract_token(params.dup)
         Payout.request(:put, "/v1/cards/#{token}/customer", params)
       end
 
       def credit(params)
-        params = params.dup
+        token, params = _extract_token(params.dup)
+        Payout.request(:post, "/v1/cards/#{token}/credits", params)
+      end
+
+      private
+
+      def _extract_token(params)
         token = params.delete(:card_token) or
           fail ArgumentError, 'missing card_token'
 
-        Payout.request(:post, "/v1/cards/#{token}/credits", params)
+        [token, params]
       end
     end
   end # V1::Card
