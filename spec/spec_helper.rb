@@ -32,7 +32,12 @@ module SharedContext
   let(:mock_client) { Payout.mock_client }
 
   def should_request_with(opts)
-    expect(mock_client).to receive(:execute).with(hash_including(opts)).once
+    expect(mock_client).to receive(:execute).with(hash_including(opts)).once do
+      # Here the response doesn't matter since we're only testing what the
+      # client should receive not what it should respond with.
+      double('response', code: 200, body: nil)
+    end
+
     subject
   end
 end

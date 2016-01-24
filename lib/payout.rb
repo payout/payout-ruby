@@ -5,11 +5,14 @@ require 'openssl'
 require 'rest-client'
 
 module Payout
-  autoload(:V1, 'payout/v1')
+  autoload(:Response, 'payout/response')
+  autoload(:V1,       'payout/v1')
 
   class Error < StandardError; end
   class AuthenticationError < Error; end
   class VersionError < Error; end
+  class ConnectionError < Error; end
+  class TimeoutError < ConnectionError; end
 
   DEFAULT_API_VERSION = 1
   DEFAULT_OPEN_TIMEOUT = 30
@@ -86,6 +89,10 @@ module Payout
     end
 
     def request(verb, path, params = {})
+      Response.handle { request!(verb, path, params) }
+    end
+
+    def request!(verb, path, params)
       url = _build_request_url(path)
       headers = _default_headers
       body = nil
@@ -153,4 +160,4 @@ module Payout
       RestClient::Request.execute(request_opts)
     end
   end # Class Methods
-end
+end # Payout
