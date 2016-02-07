@@ -39,4 +39,4 @@ Payout.read_timeout = ENV['PAYOUT_READ_TIMEOUT'].to_i # Defaults to 80
 
 ## Documentation
 
-See http://docs.payout.com for documentation.
+See https://www.payout.com/docs for documentation.
