@@ -15,7 +15,7 @@ gem install payout
 Alternatively, you can add it to you `Gemfile`.
 
 ```ruby
-gem 'payout'
+gem 'payout', '~> 0.1.0'
 ```
 
 And then run `bundle install`.
