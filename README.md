@@ -26,6 +26,7 @@ The SDK has been tested on Linux with the following ruby versions:
  * 2.0.0-p247
  * 2.1.6
  * 2.2.2
+ * 2.3.1
 
 ## Configuration
 
